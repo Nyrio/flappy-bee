@@ -2,6 +2,8 @@
     "compileOnSave": true,
     "compilerOptions": {
         "target": "es5",
-        "outFile": "game.js"
+        "module": "commonjs",
+    	"sourceMap": true,
+    	"outDir": "./dist/"
     }
 }
