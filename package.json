@@ -1,14 +1,22 @@
 {
     "name": "flappy-bee",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.0.1",
+    "main": "index.js",
     "scripts": {
-        "start": "./node_modules/.bin/tsc -p game/tsconfig.json"
+        "start": "webpack-dev-server --open",
+        "build": "webpack"
     },
     "dependencies": {
         "excalibur": "latest"
     },
     "devDependencies": {
-        "typescript": "latest"
+        "html-webpack-plugin": "latest",
+        "clean-webpack-plugin": "latest",
+        "ts-loader": "latest",
+        "typescript": "latest",
+        "webpack": "latest",
+        "webpack-cli": "latest",
+        "webpack-dev-server": "latest"
     }
 }

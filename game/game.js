@@ -11,6 +11,6 @@ for (var r in resources) {
     loader.addResource(resources[r]);
 }
 // uncomment loader after adding resources
-game.start().then(function () {
+game.start(loader).then(function () {
     // start your game!
 });

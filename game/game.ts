@@ -20,7 +20,7 @@ for (var r in resources) {
 }
 
 // uncomment loader after adding resources
-game.start(/* loader */).then(() => {
+game.start(loader).then(() => {
 
     // start your game!
 
