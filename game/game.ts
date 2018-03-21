@@ -1,9 +1,22 @@
 /// <reference path="../node_modules/excalibur/dist/excalibur.d.ts" />
 
+import { Bee } from "./bee";
+
+const WIDTH = 800;
+const HEIGHT = 600;
+
 var game = new ex.Engine({
-    width: 800,
-    height: 600
+    width: WIDTH,
+    height: HEIGHT,
+     displayMode: DisplayMode.Fixed
 });
+
+
+// scene initalization
+
+var gameScene = new ex.Scene();
+var bee = new ex.Bee();
+game.add("game", gameScene);
 
 // create an asset loader
 var loader = new ex.Loader();
@@ -21,7 +34,5 @@ for (var r in resources) {
 
 // uncomment loader after adding resources
 game.start(/* loader */).then(() => {
-
-    // start your game!
-
+    game.goToScene("game");
 });
