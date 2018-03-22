@@ -1,6 +1,9 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const { paths } = require("./helpers");
 
 module.exports = {
   entry: './src/index.ts',
@@ -14,6 +17,10 @@ module.exports = {
         test: /\.ts?$/,
         use: 'ts-loader',
         exclude: /node_modules/
+      },
+      {
+        test: /\.(png|bmp|jpg|jpeg|gif|svg)$/,
+        use: "file"
       }
     ]
   },
@@ -26,6 +33,10 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
+    new CopyWebpackPlugin([{
+      from: paths.src.assets,
+      to: paths.build.assets
+    }]),
     new HtmlWebPackPlugin({
       title: 'Flappy Bee'
     })

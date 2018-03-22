@@ -11,10 +11,13 @@
         "excalibur": "latest"
     },
     "devDependencies": {
-        "html-webpack-plugin": "latest",
         "clean-webpack-plugin": "latest",
+        "copy-webpack-plugin": "latest",
+        "file-loader": "^1.1.11",
+        "html-webpack-plugin": "latest",
         "ts-loader": "latest",
         "typescript": "latest",
+        "url-loader": "^1.0.1",
         "webpack": "latest",
         "webpack-cli": "latest",
         "webpack-dev-server": "latest"
