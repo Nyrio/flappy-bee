@@ -3,6 +3,7 @@ import { Resource } from '../../resource';
 import { Player } from '../../actors/player/player';
 import { Pesticide } from '../../actors/obstacles/pesticide';
 import { GameSettings } from '../../gamesettings';
+import { Input } from 'excalibur';
 
 
 class GameScene extends ex.Scene {
@@ -10,6 +11,7 @@ class GameScene extends ex.Scene {
 
     public player: Player;
     protected centerLabel: ex.Label;
+    protected pSpaceLabel: ex.Label;
     protected scoreLabel: ex.Label;    
 
     protected lastObstacleTime: number;
@@ -17,26 +19,36 @@ class GameScene extends ex.Scene {
 
     public gameStarted: boolean;
     public gameOver: boolean;
+    public bypass: boolean;
 
     public ground: ex.Actor;
 
     public onInitialize(engine: ex.Engine) {
         this.score = 0;
 
-        this.player = new Player(GameSettings.HEIGHT, this);
+        this.player = new Player(this);
         this.add(this.player);
-        this.player.z = 5;
+        this.player.z = 7;
 
         this.lastObstacleTime = GameSettings.TIME_INTERVAL;
         this.lastObstacleY = GameSettings.HEIGHT/2;
 
-        this.centerLabel = new ex.Label("Click to start flying.", GameSettings.WIDTH/2, GameSettings.HEIGHT/2, "Arial");
+        this.centerLabel = new ex.Label("Click to start flapping.", GameSettings.WIDTH/2, GameSettings.HEIGHT/2, "Arial");
         this.centerLabel.textAlign = ex.TextAlign.Center;
         this.centerLabel.baseAlign = ex.BaseAlign.Middle;
         this.centerLabel.fontSize = 42;
         this.centerLabel.color = ex.Color.White;
         this.add(this.centerLabel);
         this.centerLabel.z = 10;
+
+        this.pSpaceLabel = new ex.Label("Press [SPACE]", GameSettings.WIDTH/2, GameSettings.HEIGHT/2 + 32, "Arial");
+        this.pSpaceLabel.textAlign = ex.TextAlign.Center;
+        this.pSpaceLabel.baseAlign = ex.BaseAlign.Top;
+        this.pSpaceLabel.fontSize = 28;
+        this.pSpaceLabel.color = ex.Color.White;
+        this.add(this.pSpaceLabel);
+        this.pSpaceLabel.z = 10;
+        this.pSpaceLabel.visible = false;
 
         this.scoreLabel = new ex.Label("0", GameSettings.WIDTH-32, 32, "Arial");
         this.scoreLabel.textAlign = ex.TextAlign.Right;
@@ -48,6 +60,7 @@ class GameScene extends ex.Scene {
 
         this.gameStarted = false;
         this.gameOver = false;
+        this.bypass = false;
 
         this.ground = new ex.Actor();
         this.ground.addDrawing(Resource.Ground.asSprite());
@@ -56,9 +69,10 @@ class GameScene extends ex.Scene {
         this.ground.setWidth(GameSettings.WIDTH);
         this.ground.setHeight(GameSettings.GROUND_HEIGHT);
         this.add(this.ground);
-        this.ground.z = 10;
+        this.ground.z = 5;
 
         engine.input.pointers.primary.on("down", this.onPress);
+        engine.input.keyboard.on("press", (evt: Input.KeyEvent) => { if(evt.key == Input.Keys.Space) this.onSpace() });
 
         this.camera.pos = new ex.Vector(GameSettings.WIDTH/2, GameSettings.HEIGHT/2);
     }
@@ -68,14 +82,33 @@ class GameScene extends ex.Scene {
             this.gameStarted = true;
             this.centerLabel.visible = false;
         }
+    }
 
+    public onSpace = () => {
         if(this.gameOver) {
+            this.player.reset();
 
+            for(var ac in this.actors) {
+                if(this.actors[ac] instanceof Pesticide) {
+                    this.actors[ac].kill();
+                }
+            }
+
+            this.gameOver = false;
+            this.gameStarted = false;
+
+            this.score = 0;
+            this.centerLabel.text = "Click to start flapping.";
+            this.pSpaceLabel.visible = false;
+
+            this.bypass = true;
         }
     }
 
     public update(engine: ex.Engine, delta: number) {
-        if(this.gameOver || !this.gameStarted)
+        if(this.bypass)
+            this.bypass = false;
+        else if(this.gameOver || !this.gameStarted)
             return;
 
         super.update(engine, delta); // call base update logic
@@ -103,6 +136,7 @@ class GameScene extends ex.Scene {
         this.gameOver = true;
         this.centerLabel.text = "Game Over"
         this.centerLabel.visible = true;
+        this.pSpaceLabel.visible = true;
     }
 
     public onActivate() {}

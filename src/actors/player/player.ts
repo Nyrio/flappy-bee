@@ -12,19 +12,17 @@ class Player extends ex.Actor {
     private gameStarted: boolean;
     protected gameScene: GameScene;
 
-    constructor(sHeight: number, scene: GameScene) {
+    constructor(scene: GameScene) {
         super();
 
-        this.setWidth(25);
-        this.setHeight(25);
+        this.setWidth(48);
+        this.setHeight(32);
         this.x = 100;
-        this.color = new ex.Color(255, 255, 255);
 
-        this.ypos = sHeight/2;
+        this.ypos = GameSettings.HEIGHT/2;
         this.yspeed = 0;
         this.yacc = GameSettings.GRAVITY;
         this.pressed = false;
-
         this.y = this.ypos;
 
         this.gameStarted = false;
@@ -50,7 +48,14 @@ class Player extends ex.Actor {
     }
 
     public reset = () => {
-        
+        this.ypos = GameSettings.HEIGHT/2;
+        this.yspeed = 0;
+        this.yacc = GameSettings.GRAVITY;
+        this.pressed = false;
+        this.y = this.ypos;
+        this.rotation = 0;
+
+        this.gameStarted = false;
     }
 
     public update(engine: ex.Engine, delta: number) {
