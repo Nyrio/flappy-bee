@@ -1,6 +1,7 @@
 import * as ex from 'excalibur';
 import { Resource } from '../../resource';
 import { GameSettings } from '../../gamesettings';
+import { GameScene } from '../../scenes/gameScene/gamescene';
 
 class Player extends ex.Actor {
     public ypos: number;
@@ -8,8 +9,10 @@ class Player extends ex.Actor {
     public yacc: number;
     protected pressed: boolean;
     public flapAnimation: ex.Animation;
+    private gameStarted: boolean;
+    protected gameScene: GameScene;
 
-    constructor(sHeight: number) {
+    constructor(sHeight: number, scene: GameScene) {
         super();
 
         this.setWidth(25);
@@ -23,6 +26,10 @@ class Player extends ex.Actor {
         this.pressed = false;
 
         this.y = this.ypos;
+
+        this.gameStarted = false;
+
+        this.gameScene = scene;
     }
 
     public onInitialize(engine: ex.Engine) {
@@ -38,28 +45,40 @@ class Player extends ex.Actor {
     }
 
     public onPress = () => {
+        this.gameStarted = true;
         this.pressed = true;
+    }
+
+    public reset = () => {
+        
     }
 
     public update(engine: ex.Engine, delta: number) {
       super.update(engine, delta); // call base update logic
+
+      if(!this.gameStarted)
+          return;
 
       if(this.pressed) {
           this.yspeed = GameSettings.FORCE;
           this.setDrawing("flap");
       }
       else
-          this.yspeed = GameSettings.INERTIA * this.yspeed
-                      + (1-GameSettings.INERTIA) * GameSettings.GRAVITY;
+          this.yspeed = GameSettings.GRAVITY + (this.yspeed - GameSettings.GRAVITY) * (Math.exp(-delta/(1000*GameSettings.INERTIA)));
 
       this.ypos += this.yspeed * delta/1000;
       this.y = this.ypos;
-      this.rotation = Math.max(-0.3, Math.min(0.3, Math.atan2(this.yspeed, GameSettings.HSPEED)));
+      //this.rotation = Math.max(-0.3, Math.min(0.3, Math.atan2(this.yspeed, GameSettings.HSPEED)/2));
+      this.rotation = this.yspeed < 300 ? -0.3 : (this.yspeed > 600 ? 0.3 : -0.9 + 0.002 * this.yspeed);
 
       this.pressed = false;
 
       if(this.flapAnimation.isDone())
           this.setDrawing("idle");
+
+
+      if(this.collides(this.gameScene.ground) != null)
+         this.gameScene.setGameOver();
    }
 }
 

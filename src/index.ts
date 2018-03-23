@@ -25,7 +25,6 @@ for(var resource in Resource){
 const game = new Game();
 const gameScene = new GameScene();
 
-gameScene.camera.pos = new ex.Vector(GameSettings.WIDTH/2, GameSettings.HEIGHT/2);
 game.add('gameScene', gameScene);
 
 game.start(loader).then(() => {
