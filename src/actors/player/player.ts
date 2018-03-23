@@ -7,6 +7,7 @@ class Player extends ex.Actor {
     public yspeed: number;
     public yacc: number;
     protected pressed: boolean;
+    public flapAnimation: ex.Animation;
 
     constructor(sHeight: number) {
         super();
@@ -25,8 +26,13 @@ class Player extends ex.Actor {
     }
 
     public onInitialize(engine: ex.Engine) {
-        this.addDrawing("base", new ex.Sprite(Resource.TxPlayer, 0, 0, 64, 64));
+        this.addDrawing("idle", new ex.Sprite(Resource.TxPlayer, 0, 0, 64, 64));
+        this.setDrawing("idle");
 
+        const playerIdleSheet = new ex.SpriteSheet(Resource.TxPlayer, 16, 1, 64, 64);
+        this.flapAnimation = playerIdleSheet.getAnimationBetween(engine, 1, 16, 3);
+        this.flapAnimation.loop = false;
+        this.addDrawing("flap", this.flapAnimation);
 
         engine.input.pointers.primary.on("down", this.onPress);
     }
@@ -38,17 +44,22 @@ class Player extends ex.Actor {
     public update(engine: ex.Engine, delta: number) {
       super.update(engine, delta); // call base update logic
 
-      if(this.pressed)
+      if(this.pressed) {
           this.yspeed = GameSettings.FORCE;
+          this.setDrawing("flap");
+      }
       else
           this.yspeed = GameSettings.INERTIA * this.yspeed
                       + (1-GameSettings.INERTIA) * GameSettings.GRAVITY;
 
       this.ypos += this.yspeed * delta/1000;
-
       this.y = this.ypos;
+      this.rotation = Math.max(-0.3, Math.min(0.3, Math.atan2(this.yspeed, GameSettings.HSPEED)));
 
       this.pressed = false;
+
+      if(this.flapAnimation.isDone())
+          this.setDrawing("idle");
    }
 }
 

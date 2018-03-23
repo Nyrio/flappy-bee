@@ -5,4 +5,5 @@ export namespace GameSettings {
 	export const GRAVITY = 700;
 	export const FORCE = -600;
 	export const INERTIA = 0.95;
+	export const HSPEED = 400;
 }
