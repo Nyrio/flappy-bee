@@ -3,7 +3,7 @@ import { Resource } from '../../resource';
 import { GameSettings } from '../../gamesettings';
 import { GameScene } from '../../scenes/gameScene/gamescene';
 
-const pestSprites = [Resource.pesticide1, Resource.pesticide2];
+const pestSprites = [Resource.Rndp, Resource.pesticide1, Resource.pesticide2];
 
 class Pesticide extends ex.Actor {
     protected topPart: ex.Actor;
