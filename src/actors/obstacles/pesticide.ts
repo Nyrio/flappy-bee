@@ -3,6 +3,8 @@ import { Resource } from '../../resource';
 import { GameSettings } from '../../gamesettings';
 import { GameScene } from '../../scenes/gameScene/gamescene';
 
+const pestSprites = [Resource.pesticide1, Resource.pesticide2];
+
 class Pesticide extends ex.Actor {
     protected topPart: ex.Actor;
     protected bottomPart: ex.Actor;
@@ -17,7 +19,7 @@ class Pesticide extends ex.Actor {
         this.setHeight(ySpace + 2 * GameSettings.PEST_HEIGHT);
 
         this.topPart = new ex.Actor();
-        var topSprite = Resource.pesticide1.asSprite();
+        var topSprite = new ex.Sprite(pestSprites[Math.floor(Math.random() * pestSprites.length)], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
         topSprite.flipVertical = true;
         this.topPart.addDrawing(topSprite);
         this.topPart.x = 0;
@@ -27,7 +29,9 @@ class Pesticide extends ex.Actor {
         this.add(this.topPart);
 
         this.bottomPart = new ex.Actor();
-        this.bottomPart.addDrawing(Resource.pesticide2.asSprite());
+        var bottomSprite = new ex.Sprite(pestSprites[Math.floor(Math.random() * pestSprites.length)], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
+        //bottomSprite.flipVertical = false;
+        this.bottomPart.addDrawing(bottomSprite);
         this.bottomPart.x = 0;
         this.bottomPart.y = yi + (GameSettings.PEST_HEIGHT + ySpace) / 2;
         this.bottomPart.setWidth(GameSettings.PEST_WIDTH);
@@ -44,6 +48,9 @@ class Pesticide extends ex.Actor {
 
     public update(engine: ex.Engine, delta: number) {
       super.update(engine, delta); // call base update logic
+
+      if(this.gameScene.gameOver || !this.gameScene.gameStarted)
+          return;
 
       this.x -= GameSettings.HSPEED * delta/1000;
 

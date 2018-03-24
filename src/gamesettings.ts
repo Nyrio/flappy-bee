@@ -12,7 +12,7 @@ export namespace GameSettings {
     export const MAX_SPACE = 160;
     export const MIN_SPACE = 80;
     export const SCORE_MAX_DIFF = 100;
-    export const START_V_LIMIT = 0.4;
+    export const START_V_LIMIT = 0.2;
     export const END_V_LIMIT = 1;
 
     export const GROUND_HEIGHT = 64;

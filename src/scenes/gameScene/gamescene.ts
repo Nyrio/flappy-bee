@@ -20,6 +20,7 @@ class GameScene extends ex.Scene {
     public gameStarted: boolean;
     public gameOver: boolean;
     public bypass: boolean;
+    public resetScene: boolean;
 
     public ground: ex.Actor;
 
@@ -61,6 +62,7 @@ class GameScene extends ex.Scene {
         this.gameStarted = false;
         this.gameOver = false;
         this.bypass = false;
+        this.resetScene = false;
 
         this.ground = new ex.Actor();
         this.ground.addDrawing(Resource.Ground.asSprite());
@@ -85,51 +87,57 @@ class GameScene extends ex.Scene {
     }
 
     public onSpace = () => {
-        if(this.gameOver) {
-            this.player.reset();
+        if(this.gameOver)
+            this.resetScene = true;
+    }
 
+    public update(engine: ex.Engine, delta: number) {
+        super.update(engine, delta);
+
+        if(this.resetScene) {
             for(var ac in this.actors) {
                 if(this.actors[ac] instanceof Pesticide) {
                     this.actors[ac].kill();
                 }
             }
 
-            this.gameOver = false;
-            this.gameStarted = false;
+            this.player.reset();
 
             this.score = 0;
-            this.centerLabel.text = "Click to start flapping.";
             this.pSpaceLabel.visible = false;
+            this.centerLabel.text = "Click to start flapping.";
 
-            this.bypass = true;
+            this.gameStarted = false;
+            this.gameOver = false;
+
+            this.resetScene = false;
         }
-    }
 
-    public update(engine: ex.Engine, delta: number) {
-        if(this.bypass)
-            this.bypass = false;
         else if(this.gameOver || !this.gameStarted)
             return;
 
-        super.update(engine, delta); // call base update logic
+        else {
 
-        this.lastObstacleTime += delta/1000;
+            //super.update(engine, delta); // call base update logic
 
-        if(this.lastObstacleTime > GameSettings.TIME_INTERVAL) {
-            var posx = GameSettings.WIDTH + Math.floor(Math.random() * GameSettings.VARIABILITY);
-            var spaceY = Math.floor(GameSettings.MAX_SPACE - (GameSettings.MAX_SPACE - GameSettings.MIN_SPACE) / GameSettings.SCORE_MAX_DIFF);
-            var posy;
-            do {
-                posy = Math.floor(spaceY + Math.random() * (GameSettings.HEIGHT - GameSettings.GROUND_HEIGHT - 2*spaceY))
-            } while(Math.abs(posy - this.lastObstacleY) > (GameSettings.START_V_LIMIT + (GameSettings.END_V_LIMIT - GameSettings.START_V_LIMIT) * this.score / GameSettings.SCORE_MAX_DIFF) * GameSettings.HEIGHT);
-            //alert(posx + " " + posy + " " + spaceY);
+            this.lastObstacleTime += delta/1000;
 
-            this.add(new Pesticide(posx, posy, spaceY, this));
-            this.lastObstacleY = posy;
-            this.lastObstacleTime = 0;
+            if(this.lastObstacleTime > GameSettings.TIME_INTERVAL) {
+                var posx = GameSettings.WIDTH + Math.floor(Math.random() * GameSettings.VARIABILITY);
+                var spaceY = Math.floor(GameSettings.MAX_SPACE - (GameSettings.MAX_SPACE - GameSettings.MIN_SPACE) / GameSettings.SCORE_MAX_DIFF);
+                var posy;
+                do {
+                    posy = Math.floor(spaceY + Math.random() * (GameSettings.HEIGHT - GameSettings.GROUND_HEIGHT - 2*spaceY))
+                } while(Math.abs(posy - this.lastObstacleY) > (GameSettings.START_V_LIMIT + (GameSettings.END_V_LIMIT - GameSettings.START_V_LIMIT) * this.score / GameSettings.SCORE_MAX_DIFF) * GameSettings.HEIGHT);
+                //alert(posx + " " + posy + " " + spaceY);
+
+                this.add(new Pesticide(posx, posy, spaceY, this));
+                this.lastObstacleY = posy;
+                this.lastObstacleTime = 0;
+            }
+
+            this.scoreLabel.text = this.score.toString();
         }
-
-        this.scoreLabel.text = this.score.toString();
     }
 
     public setGameOver = () => {

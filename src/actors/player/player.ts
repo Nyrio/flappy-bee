@@ -9,7 +9,7 @@ class Player extends ex.Actor {
     public yacc: number;
     protected pressed: boolean;
     public flapAnimation: ex.Animation;
-    private gameStarted: boolean;
+    //private gameStarted: boolean;
     protected gameScene: GameScene;
 
     constructor(scene: GameScene) {
@@ -25,7 +25,7 @@ class Player extends ex.Actor {
         this.pressed = false;
         this.y = this.ypos;
 
-        this.gameStarted = false;
+        //this.gameStarted = false;
 
         this.gameScene = scene;
     }
@@ -43,7 +43,7 @@ class Player extends ex.Actor {
     }
 
     public onPress = () => {
-        this.gameStarted = true;
+        //this.gameStarted = true;
         this.pressed = true;
     }
 
@@ -55,13 +55,13 @@ class Player extends ex.Actor {
         this.y = this.ypos;
         this.rotation = 0;
 
-        this.gameStarted = false;
+        //this.gameStarted = false;
     }
 
     public update(engine: ex.Engine, delta: number) {
       super.update(engine, delta); // call base update logic
 
-      if(!this.gameStarted)
+      if(this.gameScene.gameOver || !this.gameScene.gameStarted)
           return;
 
       if(this.pressed) {
