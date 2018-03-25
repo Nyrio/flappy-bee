@@ -18,8 +18,14 @@ class Pesticide extends ex.Actor {
         this.setWidth(GameSettings.PEST_WIDTH);
         this.setHeight(ySpace + 2 * GameSettings.PEST_HEIGHT);
 
+        var randi = Math.floor(Math.random() * pestSprites.length);
+        var randj;
+        do {
+            randj = Math.floor(Math.random() * pestSprites.length);
+        } while(randi == randj);
+
         this.topPart = new ex.Actor();
-        var topSprite = new ex.Sprite(pestSprites[Math.floor(Math.random() * pestSprites.length)], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
+        var topSprite = new ex.Sprite(pestSprites[randi], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
         topSprite.flipVertical = true;
         this.topPart.addDrawing(topSprite);
         this.topPart.x = 0;
@@ -29,7 +35,7 @@ class Pesticide extends ex.Actor {
         this.add(this.topPart);
 
         this.bottomPart = new ex.Actor();
-        var bottomSprite = new ex.Sprite(pestSprites[Math.floor(Math.random() * pestSprites.length)], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
+        var bottomSprite = new ex.Sprite(pestSprites[randj], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
         //bottomSprite.flipVertical = false;
         this.bottomPart.addDrawing(bottomSprite);
         this.bottomPart.x = 0;

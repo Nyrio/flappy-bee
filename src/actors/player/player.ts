@@ -15,7 +15,7 @@ class Player extends ex.Actor {
     constructor(scene: GameScene) {
         super();
 
-        this.setWidth(48);
+        this.setWidth(42);
         this.setHeight(32);
         this.x = 100;
 
