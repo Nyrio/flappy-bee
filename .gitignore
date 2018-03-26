@@ -1,5 +1,13 @@
 package.json
 package-lock.json
 
+# Graphic working files
 *.kra~
 *.png~
+
+# Node stuff
+node_modules/
+.npm
+
+# Windows stuff
+.DS_Store
