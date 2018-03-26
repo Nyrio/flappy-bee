@@ -11,3 +11,6 @@ node_modules/
 
 # Windows stuff
 .DS_Store
+
+# Editor files
+*.sublime*
