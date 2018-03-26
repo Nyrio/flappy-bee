@@ -16,6 +16,7 @@ class GameScene extends ex.Scene {
 
     protected lastObstacleTime: number;
     protected lastObstacleY: number;
+    public lastPest: number;
 
     public gameStarted: boolean;
     public gameOver: boolean;
@@ -33,6 +34,7 @@ class GameScene extends ex.Scene {
 
         this.lastObstacleTime = GameSettings.TIME_INTERVAL;
         this.lastObstacleY = GameSettings.HEIGHT/2;
+        this.lastPest = -1;
 
         this.centerLabel = new ex.Label("Click to start flapping.", GameSettings.WIDTH/2, GameSettings.HEIGHT/2, "Arial");
         this.centerLabel.textAlign = ex.TextAlign.Center;

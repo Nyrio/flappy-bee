@@ -3,7 +3,7 @@ import { Resource } from '../../resource';
 import { GameSettings } from '../../gamesettings';
 import { GameScene } from '../../scenes/gameScene/gamescene';
 
-const pestSprites = [Resource.Rndp, Resource.pesticide1, Resource.pesticide2];
+const pestSprites = [Resource.Rndp, Resource.Smrtx, Resource.InsctWasp, Resource.Chogo];
 
 class Pesticide extends ex.Actor {
     protected topPart: ex.Actor;
@@ -18,11 +18,11 @@ class Pesticide extends ex.Actor {
         this.setWidth(GameSettings.PEST_WIDTH);
         this.setHeight(ySpace + 2 * GameSettings.PEST_HEIGHT);
 
-        var randi = Math.floor(Math.random() * pestSprites.length);
-        var randj;
+        var randi;
         do {
-            randj = Math.floor(Math.random() * pestSprites.length);
-        } while(randi == randj);
+            randi = Math.floor(Math.random() * pestSprites.length);
+        } while(randi == scene.lastPest);
+        scene.lastPest = randi;
 
         this.topPart = new ex.Actor();
         var topSprite = new ex.Sprite(pestSprites[randi], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
@@ -35,7 +35,7 @@ class Pesticide extends ex.Actor {
         this.add(this.topPart);
 
         this.bottomPart = new ex.Actor();
-        var bottomSprite = new ex.Sprite(pestSprites[randj], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
+        var bottomSprite = new ex.Sprite(pestSprites[randi], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
         //bottomSprite.flipVertical = false;
         this.bottomPart.addDrawing(bottomSprite);
         this.bottomPart.x = 0;
