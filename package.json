@@ -8,7 +8,8 @@
         "build": "./node_modules/.bin/webpack"
     },
     "dependencies": {
-        "excalibur": "latest"
+        "excalibur": "latest",
+        "npm": "^5.8.0"
     },
     "devDependencies": {
         "clean-webpack-plugin": "latest",
