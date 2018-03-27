@@ -179,6 +179,8 @@ class GameScene extends ex.Scene {
         this.centerLabel.text = "Game Over"
         this.centerLabel.visible = true;
         this.lastObstacleTime = 0;
+
+        // INSERT CODE HERE TO SEND SCORE TO GAME STORE
     }
 
     public onActivate() {}
