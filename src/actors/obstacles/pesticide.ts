@@ -15,7 +15,7 @@ class Pesticide extends ex.Actor {
         super();
 
         this.x = xi;
-        this.setWidth(GameSettings.PEST_WIDTH);
+        this.setWidth(0.8*GameSettings.PEST_WIDTH);
         this.setHeight(ySpace + 2 * GameSettings.PEST_HEIGHT);
 
         var randi;

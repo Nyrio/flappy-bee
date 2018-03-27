@@ -2,6 +2,7 @@ import * as ex from 'excalibur';
 import { Resource } from '../../resource';
 import { Player } from '../../actors/player/player';
 import { Pesticide } from '../../actors/obstacles/pesticide';
+import { BackgroundObject } from '../../actors/decor/backgroundObject';
 import { GameSettings } from '../../gamesettings';
 //import { Input } from 'excalibur';
 
@@ -17,6 +18,7 @@ class GameScene extends ex.Scene {
     protected lastObstacleTime: number;
     protected lastObstacleY: number;
     public lastPest: number;
+    protected lastBackgroundTime: number;
 
     public gameStarted: boolean;
     public gameOver: boolean;
@@ -28,6 +30,13 @@ class GameScene extends ex.Scene {
     public onInitialize(engine: ex.Engine) {
         this.score = 0;
 
+        var background = new ex.Actor();
+        background.addDrawing(Resource.Background.asSprite());
+        this.add(background);
+        background.x = GameSettings.WIDTH/2;
+        background.y = GameSettings.HEIGHT/2;
+        background.z = -10;
+
         this.player = new Player(this);
         this.add(this.player);
         this.player.z = 7;
@@ -35,6 +44,7 @@ class GameScene extends ex.Scene {
         this.lastObstacleTime = GameSettings.TIME_INTERVAL;
         this.lastObstacleY = GameSettings.HEIGHT/2;
         this.lastPest = -1;
+        this.lastBackgroundTime = GameSettings.BG_TIME_INTERVAL;
 
         this.centerLabel = new ex.Label("Click to start flapping.", GameSettings.WIDTH/2, GameSettings.HEIGHT/2, "Arial");
         this.centerLabel.textAlign = ex.TextAlign.Center;
@@ -105,7 +115,7 @@ class GameScene extends ex.Scene {
 
         if(this.resetScene) {
             for(var ac in this.actors) {
-                if(this.actors[ac] instanceof Pesticide) {
+                if(this.actors[ac] instanceof Pesticide || this.actors[ac] instanceof BackgroundObject) {
                     this.actors[ac].kill();
                 }
             }
@@ -123,6 +133,8 @@ class GameScene extends ex.Scene {
             this.lastObstacleTime = GameSettings.TIME_INTERVAL;
             this.lastObstacleY = GameSettings.HEIGHT/2;
 
+            this.lastBackgroundTime = GameSettings.BG_TIME_INTERVAL;
+
             this.resetScene = false;
         }
 
@@ -134,6 +146,7 @@ class GameScene extends ex.Scene {
             //super.update(engine, delta); // call base update logic
 
             this.lastObstacleTime += delta/1000;
+            this.lastBackgroundTime += delta/1000;
 
             if(this.lastObstacleTime > GameSettings.TIME_INTERVAL) {
                 var posx = GameSettings.WIDTH + Math.floor(Math.random() * GameSettings.VARIABILITY);
@@ -147,6 +160,14 @@ class GameScene extends ex.Scene {
                 this.add(new Pesticide(posx, posy, spaceY, this));
                 this.lastObstacleY = posy;
                 this.lastObstacleTime = 0;
+            }
+
+
+            if(this.lastBackgroundTime > GameSettings.BG_TIME_INTERVAL) {
+                var bg = new BackgroundObject(this)
+                this.add(bg);
+                bg.z = -3
+                this.lastBackgroundTime = 0;
             }
 
             this.scoreLabel.text = this.score.toString();
