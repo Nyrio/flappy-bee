@@ -3,6 +3,7 @@ import { GameScene } from './scenes/gameScene/gamescene';
 import { Player } from './actors/player/player';
 import { Resource } from './resource';
 import { GameSettings } from './gamesettings';
+import { Communication } from './communication';
 
 class Game extends ex.Engine {
     constructor() {
@@ -10,6 +11,7 @@ class Game extends ex.Engine {
                 height: GameSettings.HEIGHT,
                 displayMode: ex.DisplayMode.Fixed,
                 pointerScope: ex.Input.PointerScope.Canvas });
+        Communication.postSettings(GameSettings.WIDTH, GameSettings.HEIGHT);
     }
 
     public start(loader?: ex.ILoader) {

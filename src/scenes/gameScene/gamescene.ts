@@ -10,11 +10,13 @@ import { Communication } from '../../communication';
 
 class GameScene extends ex.Scene {
     public score: number;
+    public bestScore: number;
 
     public player: Player;
     protected centerLabel: ex.Label;
     protected restartLabel: ex.Label;
     protected scoreLabel: ex.Label;
+    protected bestScoreLabel: ex.Label;
 
     protected lastObstacleTime: number;
     protected lastObstacleY: number;
@@ -30,6 +32,7 @@ class GameScene extends ex.Scene {
 
     public onInitialize(engine: ex.Engine) {
         this.score = 0;
+        this.bestScore = 0;
 
         var background = new ex.Actor();
         background.addDrawing(Resource.Background.asSprite());
@@ -64,13 +67,21 @@ class GameScene extends ex.Scene {
         this.restartLabel.z = 10;
         this.restartLabel.visible = false;
 
-        this.scoreLabel = new ex.Label("0", GameSettings.WIDTH-32, 32, "Arial");
-        this.scoreLabel.textAlign = ex.TextAlign.Right;
+        this.scoreLabel = new ex.Label("0", 32, 32, "Arial");
+        this.scoreLabel.textAlign = ex.TextAlign.Left;
         this.scoreLabel.baseAlign = ex.BaseAlign.Top;
         this.scoreLabel.fontSize = 42;
         this.scoreLabel.color = ex.Color.White;
         this.add(this.scoreLabel);
         this.scoreLabel.z = 10;
+
+        this.bestScoreLabel = new ex.Label("Best: 0", GameSettings.WIDTH-32, 32, "Arial");
+        this.bestScoreLabel.textAlign = ex.TextAlign.Right;
+        this.bestScoreLabel.baseAlign = ex.BaseAlign.Top;
+        this.bestScoreLabel.fontSize = 42;
+        this.bestScoreLabel.color = ex.Color.White;
+        this.add(this.bestScoreLabel);
+        this.bestScoreLabel.z = 10;
 
         this.gameStarted = false;
         this.gameOver = false;
@@ -89,6 +100,8 @@ class GameScene extends ex.Scene {
         engine.input.pointers.primary.on("down", this.onPress);
         //engine.input.keyboard.on("press", (evt: Input.KeyEvent) => { if(evt.key == Input.Keys.Space) this.onSpace() });
 
+        window.addEventListener("message", this.receiveMessage, false);
+
         this.camera.pos = new ex.Vector(GameSettings.WIDTH/2, GameSettings.HEIGHT/2);
     }
 
@@ -102,9 +115,18 @@ class GameScene extends ex.Scene {
             this.resetScene = true;
     }
 
+    public receiveMessage = (event: any) => {
+        if(event.data.messageType == "LOAD") {
+            //console.log("received message");
+            this.bestScore = Math.max(this.bestScore, event.data.gameState.bestScore);
+        }
+    }
+
 
     public update(engine: ex.Engine, delta: number) {
         super.update(engine, delta);
+
+        this.bestScoreLabel.text = "Best: " + this.bestScore;
 
         if(this.gameOver && !this.canRestart) {
             this.lastObstacleTime += delta/1000;
@@ -180,6 +202,11 @@ class GameScene extends ex.Scene {
         this.centerLabel.text = "Game Over"
         this.centerLabel.visible = true;
         this.lastObstacleTime = 0;
+
+        if(this.score > this.bestScore) {
+            this.bestScore = this.score;
+            Communication.postGameState(this.bestScore);
+        }
 
         Communication.postScore(this.score);
     }

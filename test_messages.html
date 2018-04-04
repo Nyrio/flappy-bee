@@ -8,17 +8,39 @@
   /* global $ */
   $(document).ready(function() {
     'use strict';
-    console.log("ready");
+
     $(window).on('message', function(evt) {
-      console.log("message received");
       //Get data from sent message
       var data = evt.originalEvent.data;
-      //Create a new list item based on the data
-      var newItem = '\n\t<li>Score: ' + data.score + '</li>';
-      //Add the item to the beginning of the actions list
-      $('#scores').prepend(newItem);
+
+      if(data.messageType == "SCORE")
+      {
+        //Create a new list item based on the data
+        var newItem = '\n\t<li>Score: ' + data.score + '</li>';
+        //Add the item to the beginning of the actions list
+        $('#scores').prepend(newItem);
+      }
+      else if(data.messageType == "SETTING")
+      {
+        //Create a new list item based on the data
+        var newItem = '\n\t<li>Settings: ' + data.options.width + " - " + data.options.height + '</li>';
+        //Add the item to the beginning of the actions list
+        $('#scores').prepend(newItem);
+      }
+      else if(data.messageType == "SAVE")
+      {
+        //Create a new list item based on the data
+        var newItem = '\n\t<li>Saved: best = ' + data.gameState.bestScore + '</li>';
+        //Add the item to the beginning of the actions list
+        $('#scores').prepend(newItem);
+      }
     });
   });
+
+  function loadHighScore(highScore) {
+    var msg = { messageType: "LOAD", gameState: { bestScore: highScore } };
+    document.getElementById("game").contentWindow.postMessage(msg, "*");
+  }
   </script>
 </head>
 
@@ -26,5 +48,6 @@
   <iframe id="game" src="dist/index.html" style="width: 100%; height: 620px"></iframe>
   <ul id="scores">
   </ul>
+  <button onclick="loadHighScore(42)">Load High Score</button>
 </body>
 </html>
