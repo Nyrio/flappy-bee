@@ -4,6 +4,7 @@ import { Player } from '../../actors/player/player';
 import { Pesticide } from '../../actors/obstacles/pesticide';
 import { BackgroundObject } from '../../actors/decor/backgroundObject';
 import { GameSettings } from '../../gamesettings';
+import { Communication } from '../../communication';
 //import { Input } from 'excalibur';
 
 
@@ -180,7 +181,7 @@ class GameScene extends ex.Scene {
         this.centerLabel.visible = true;
         this.lastObstacleTime = 0;
 
-        // INSERT CODE HERE TO SEND SCORE TO GAME STORE
+        Communication.postScore(this.score);
     }
 
     public onActivate() {}
