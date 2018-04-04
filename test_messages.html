@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test user messages</title>
+  <meta charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+  /* global $ */
+  $(document).ready(function() {
+    'use strict';
+    console.log("ready");
+    $(window).on('message', function(evt) {
+      console.log("message received");
+      //Get data from sent message
+      var data = evt.originalEvent.data;
+      //Create a new list item based on the data
+      var newItem = '\n\t<li>Score: ' + data.score + '</li>';
+      //Add the item to the beginning of the actions list
+      $('#scores').prepend(newItem);
+    });
+  });
+  </script>
+</head>
+
+<body>
+  <iframe id="game" src="dist/index.html" style="width: 100%; height: 620px"></iframe>
+  <ul id="scores">
+  </ul>
+</body>
+</html>
