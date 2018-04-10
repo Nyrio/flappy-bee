@@ -5,9 +5,11 @@ import { GameScene } from '../../scenes/gameScene/gamescene';
 
 const objSprites = [Resource.ChemicalPlant, Resource.RadioTower];
 
-class BackgroundObject extends ex.Actor {
-    protected gameScene: GameScene;
 
+// Backrgound objects have very little logic, to scroll and destroy themselves when off-screen.
+class BackgroundObject extends ex.Actor {
+
+    protected gameScene: GameScene;
 
     constructor(scene: GameScene) {
         super();

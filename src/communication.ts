@@ -1,3 +1,5 @@
+// These functions handle all messages sent to the game store.
+// Messages received are handled in GameScene class.
 export namespace Communication {
     export function loadRequest () {
         var msg = { messageType: "LOAD_REQUEST" };

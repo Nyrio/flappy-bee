@@ -1,6 +1,6 @@
 import * as ex from 'excalibur';
 
-// Image and sound resources to be loaded
+// Image and sound resources to be pre-loaded
 var Resource = {
 	Background: new ex.Texture("assets/background.png"),
 

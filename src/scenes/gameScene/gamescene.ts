@@ -5,10 +5,11 @@ import { Pesticide } from '../../actors/obstacles/pesticide';
 import { BackgroundObject } from '../../actors/decor/backgroundObject';
 import { GameSettings } from '../../gamesettings';
 import { Communication } from '../../communication';
-//import { Input } from 'excalibur';
 
 
+// The game scene runs forevers, being able to reset its own state to create a new game.
 class GameScene extends ex.Scene {
+
     public score: number;
     public bestScore: number;
 
@@ -116,6 +117,7 @@ class GameScene extends ex.Scene {
             this.resetScene = true;
     }
 
+    // Function called by an event listener to handle messages from the store.
     public receiveMessage = (event: any) => {
         if(event.data.messageType == "LOAD") {
             //console.log("received message");
@@ -129,6 +131,8 @@ class GameScene extends ex.Scene {
 
         this.bestScoreLabel.text = "Best: " + this.bestScore;
 
+        // There's a timer after game over before the player can click restart, just to avoid to restart
+        // accidentally because the player is tapping the screen before they notice the game has ended.
         if(this.gameOver && !this.canRestart) {
             this.lastObstacleTime += delta/1000;
             if(this.lastObstacleTime > 1) {
@@ -137,6 +141,7 @@ class GameScene extends ex.Scene {
             }
         }
 
+        // This allows to reset the game completely after a game over and restart.
         if(this.resetScene) {
             for(var ac in this.actors) {
                 if(this.actors[ac] instanceof Pesticide || this.actors[ac] instanceof BackgroundObject) {
@@ -162,12 +167,11 @@ class GameScene extends ex.Scene {
             this.resetScene = false;
         }
 
+        // Doing nothing if game isn't active
         else if(this.gameOver || !this.gameStarted)
             return;
 
         else {
-
-            //super.update(engine, delta); // call base update logic
 
             this.lastObstacleTime += delta/1000;
             this.lastBackgroundTime += delta/1000;
@@ -198,6 +202,7 @@ class GameScene extends ex.Scene {
         }
     }
 
+    // Called by the obstacles when they detect collision
     public setGameOver = () => {
         this.gameOver = true;
         this.centerLabel.text = "Game Over"

@@ -3,13 +3,16 @@ import { Resource } from '../../resource';
 import { GameSettings } from '../../gamesettings';
 import { GameScene } from '../../scenes/gameScene/gamescene';
 
+
+// This class handles the player animation and movement.
+// It listens to clicks on the canvas to detect player input.
 class Player extends ex.Actor {
+
     public ypos: number;
     public yspeed: number;
     public yacc: number;
     protected pressed: boolean;
     public flapAnimation: ex.Animation;
-    //private gameStarted: boolean;
     protected gameScene: GameScene;
 
     constructor(scene: GameScene) {
@@ -24,8 +27,6 @@ class Player extends ex.Actor {
         this.yacc = GameSettings.GRAVITY;
         this.pressed = false;
         this.y = this.ypos;
-
-        //this.gameStarted = false;
 
         this.gameScene = scene;
     }
@@ -43,10 +44,10 @@ class Player extends ex.Actor {
     }
 
     public onPress = () => {
-        //this.gameStarted = true;
         this.pressed = true;
     }
 
+    // reset the player state when starting a new game
     public reset = () => {
         this.ypos = GameSettings.HEIGHT/2;
         this.yspeed = 0;
@@ -54,16 +55,17 @@ class Player extends ex.Actor {
         this.pressed = false;
         this.y = this.ypos;
         this.rotation = 0;
-
-        //this.gameStarted = false;
     }
+
 
     public update(engine: ex.Engine, delta: number) {
       super.update(engine, delta); // call base update logic
 
+      // doing nothing is the game is not active
       if(this.gameScene.gameOver || !this.gameScene.gameStarted)
           return;
 
+      // taking input into account
       if(this.pressed) {
           this.yspeed = GameSettings.FORCE;
           this.setDrawing("flap");
@@ -73,7 +75,6 @@ class Player extends ex.Actor {
 
       this.ypos += this.yspeed * delta/1000;
       this.y = this.ypos;
-      //this.rotation = Math.max(-0.3, Math.min(0.3, Math.atan2(this.yspeed, GameSettings.HSPEED)/2));
       this.rotation = this.yspeed < 300 ? -0.3 : (this.yspeed > 600 ? 0.3 : -0.9 + 0.002 * this.yspeed);
 
       this.pressed = false;

@@ -5,7 +5,11 @@ import { GameScene } from '../../scenes/gameScene/gamescene';
 
 const pestSprites = [Resource.Rndp, Resource.Smrtx, Resource.InsctWasp, Resource.Chogo];
 
+
+// The two sprites constituing the pesticide are children actors.
+// The pesticide groups them for common logic: scrolling, detecting collision with player, etc.
 class Pesticide extends ex.Actor {
+
     protected topPart: ex.Actor;
     protected bottomPart: ex.Actor;
     protected gameScene: GameScene;
@@ -36,7 +40,6 @@ class Pesticide extends ex.Actor {
 
         this.bottomPart = new ex.Actor();
         var bottomSprite = new ex.Sprite(pestSprites[randi], 0, 0, GameSettings.PEST_WIDTH, GameSettings.PEST_HEIGHT);
-        //bottomSprite.flipVertical = false;
         this.bottomPart.addDrawing(bottomSprite);
         this.bottomPart.x = 0;
         this.bottomPart.y = yi + (GameSettings.PEST_HEIGHT + ySpace) / 2;
@@ -60,15 +63,18 @@ class Pesticide extends ex.Actor {
 
       this.x -= GameSettings.HSPEED * delta/1000;
 
+      // If the player collides with an obstacle -> Game Over
       if(this.topPart.collides(this.gameScene.player) != null || this.bottomPart.collides(this.gameScene.player) != null)
          this.gameScene.setGameOver();
 
       if(this.x < GameSettings.PEST_WIDTH/2) {
+          // increase player score when they pass an obstacle
           if(!this.passed) {
               this.passed = true;
               this.gameScene.score++;
           }
 
+          // destroying the obstacle when off-screen
           if(this.x < -GameSettings.PEST_WIDTH/2) {
               this.kill();
           }
