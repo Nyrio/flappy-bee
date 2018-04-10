@@ -12,6 +12,7 @@ class Game extends ex.Engine {
                 displayMode: ex.DisplayMode.Fixed,
                 pointerScope: ex.Input.PointerScope.Canvas });
         Communication.postSettings(GameSettings.WIDTH, GameSettings.HEIGHT);
+        Communication.loadRequest();
     }
 
     public start(loader?: ex.ILoader) {

@@ -1,8 +1,12 @@
 export namespace Communication {
+    export function loadRequest () {
+        var msg = { messageType: "LOAD_REQUEST" };
+        window.parent.postMessage(msg, "*");
+    }
+
     export function postScore (newScore: number) {
         var msg = {messageType: "SCORE", score: newScore};
         window.parent.postMessage(msg, "*");
-        //console.log(msg);
     }
 
     export function postSettings (width: number, height: number) {
