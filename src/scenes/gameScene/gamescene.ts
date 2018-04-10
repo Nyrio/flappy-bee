@@ -101,6 +101,7 @@ class GameScene extends ex.Scene {
         //engine.input.keyboard.on("press", (evt: Input.KeyEvent) => { if(evt.key == Input.Keys.Space) this.onSpace() });
 
         window.addEventListener("message", this.receiveMessage, false);
+        Communication.loadRequest();
 
         this.camera.pos = new ex.Vector(GameSettings.WIDTH/2, GameSettings.HEIGHT/2);
     }
