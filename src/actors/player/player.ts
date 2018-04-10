@@ -83,7 +83,7 @@ class Player extends ex.Actor {
           this.setDrawing("idle");
 
 
-      if(this.collides(this.gameScene.ground) != null)
+      if(this.collides(this.gameScene.ground) != null || this.y < -100)
          this.gameScene.setGameOver();
    }
 }
